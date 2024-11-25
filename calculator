@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scientific Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background:  #ccffff;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    
+    .calculator-container {
+      display: flex;
+      gap: 20px;
+      max-width: 100%;
+    }
+    
+    .calculator {
+      background: black;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 200%;
+      max-width: 600px;
+    }
+    
+    .mode {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    
+    .mode button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      margin-right: 5px;
+      font-size: 1em;
+      cursor: pointer;
+      background: linear-gradient(90deg, #33cccc, #000000);
+      color: white;
+    }
+    
+    .mode button:last-child {
+      margin-right: 0;
+    }
+    
+    .mode button.active {
+      background: linear-gradient(135deg, #66ccff, #000000);
+    }
+    
+    #display {
+      width: 100%;
+      height: 50px;
+      margin-bottom: 10px;
+      font-size: 1.5em;
+      text-align: right;
+      padding: 5px;
+      border: 1px solid black;
+      border-radius: 5px;
+    }
+    
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    
+    button {
+      padding: 15px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: linear-gradient(90deg, #33cccc, #000000);
+      box-shadow: linear-gradient(90deg, #33cccc, #000000);
+      color: white;
+    }
+    
+    button:hover {
+      background: linear-gradient(135deg, #66ccff, #000000);
+    }
+    
+    button:active {
+      background: linear-gradient(135deg, #66ccff, #000000);
+    }
+    
+    .history {
+      background: #000000;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-height: 500px;
+      overflow-y: auto;
+      display: none;
+    }
+    
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .history-header h3 {
+      font-size: 1.2em;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .clear-history-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.5em;
+      cursor: pointer;
+      color: #dc3545;
+    }
+    
+    .clear-history-btn:hover {
+      color: #b02a37;
+    }
+    
+    .history ul {
+      list-style-type: none;
+      padding: 0;
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background: #f9f9f9;
+    }
+    
+    .history ul li {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      font-size: 0.9em;
+      cursor: pointer;
+    }
+    
+    .history ul li:hover {
+      background: #e9ecef;
+    }
+    
+    .history-btn {
+      position: absolute;
+      top: 136px;
+      right: 797px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      cursor: pointer;
+    }
+    
+    .history-btn:hover {
+      background-color: #218838;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="calculator-container">
+  
+    <div class="calculator">
+      <div class="mode">
+        <button id="degMode" class="active" onclick="setMode('deg')">Deg</button>
+        <button id="radMode" onclick="setMode('rad')">Rad</button>
+      </div>
+      <input type="text" id="display" readonly placeholder="0">
+      <div class="buttons">
+        
+        <button onclick="calculate('Ans')">Ans</button>
+        <button onclick="appendValue('(')">(</button>
+        <button onclick="appendValue(')')">)</button>
+        <button onclick="appendValue('%')">%</button>
+        <button onclick="clearDisplay()">CE</button>
+
+        
+        <button onclick="scientificFunc('sin')">sin</button>
+        <button onclick="scientificFunc('cos')">cos</button>
+        <button onclick="scientificFunc('tan')">tan</button>
+        <button onclick="scientificFunc('log')">log</button>
+        <button onclick="scientificFunc('sqrt')">√</button>
+
+        <!-- Numbers and operators -->
+        <button onclick="appendValue('7')">7</button>
+        <button onclick="appendValue('8')">8</button>
+        <button onclick="appendValue('9')">9</button>
+        <button onclick="appendValue('/')">÷</button>
+        <button onclick="scientificFunc('exp')">EXP</button>
+
+        <button onclick="appendValue('4')">4</button>
+        <button onclick="appendValue('5')">5</button>
+        <button onclick="appendValue('6')">6</button>
+        <button onclick="appendValue('*')">×</button>
+        <button onclick="scientificFunc('pow')">xʸ</button>
+
+        <button onclick="appendValue('1')">1</button>
+        <button onclick="appendValue('2')">2</button>
+        <button onclick="appendValue('3')">3</button>
+        <button onclick="appendValue('-')">−</button>
+        <button onclick="appendValue('π')">π</button>
+
+        <button onclick="appendValue('0')">0</button>
+        <button onclick="appendValue('.')">.</button>
+        <button onclick="calculate()">=</button>
+        <button onclick="appendValue('+')">+</button>
+        <button onclick="appendValue('e')">e</button>
+        <button id="history-btn" class="history-btn" onclick="toggleHistory()">🕒</button>
+      </div>
+    </div>
+
+    <div class="history" id="history-section">
+      <div class="history-header">
+        <h3>🕒</h3>
+        <button onclick="clearHistory()" class="clear-history-btn">🗑️</button>
+      </div>
+      <ul id="history-list"></ul>
+    </div>
+  </div>
+
+
+
+  <script>
+    let mode = 'deg';
+let lastAnswer = 0;
+
+function appendValue(value) {
+  const display = document.getElementById('display');
+  display.value += value;
+}
+
+function clearDisplay() {
+  document.getElementById('display').value = '';
+}
+
+function setMode(newMode) {
+  mode = newMode;
+  document.getElementById('degMode').classList.remove('active');
+  document.getElementById('radMode').classList.remove('active');
+  document.getElementById(`${newMode}Mode`).classList.add('active');
+}
+
+function calculate() {
+  const display = document.getElementById('display');
+  try {
+    const result = eval(display.value.replace('π', Math.PI).replace('e', Math.E));
+    lastAnswer = result;
+    addHistory(display.value, result);
+    display.value = result;
+  } catch (error) {
+    display.value = 'Error';
+  }
+}
+
+function scientificFunc(func) {
+  const display = document.getElementById('display');
+  let result;
+  try {
+    const value = parseFloat(display.value);
+    if (func === 'sin') result = mode === 'deg' ? Math.sin((value * Math.PI) / 180) : Math.sin(value);
+    if (func === 'cos') result = mode === 'deg' ? Math.cos((value * Math.PI) / 180) : Math.cos(value);
+    if (func === 'tan') result = mode === 'deg' ? Math.tan((value * Math.PI) / 180) : Math.tan(value);
+    if (func === 'log') result = Math.log10(value);
+    if (func === 'sqrt') result = Math.sqrt(value);
+    if (func === 'exp') result = Math.exp(value);
+    if (func === 'pow') result = Math.pow(value, 2);
+  } catch (error) {
+    result = 'Error';
+  }
+  display.value = result;
+}
+
+function addHistory(input, result) {
+  const historyList = document.getElementById('history-list');
+  const historyItem = document.createElement('li');
+  historyItem.textContent = `${input} = ${result}`;
+  historyItem.onclick = () => (document.getElementById('display').value = result);
+  historyList.prepend(historyItem);
+}
+
+function clearHistory() {
+  document.getElementById('history-list').innerHTML = '';
+}
+
+function toggleHistory() {
+  const historySection = document.getElementById('history-section');
+  historySection.style.display = historySection.style.display === 'none' ? 'block' : 'none';
+}
+
+  </script>
+</body>
+</html>
